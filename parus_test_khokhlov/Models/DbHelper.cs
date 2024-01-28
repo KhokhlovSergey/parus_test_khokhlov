@@ -55,7 +55,7 @@ namespace parus_test_khokhlov.Models
                 {
                     dbTable.Name = projectModel.Name;
                     dbTable.Description = projectModel.Description;
-                    dbTable.Created_at = projectModel.Created_at;
+                    projectModel.Created_at = dbTable.Created_at;
                     dbTable.Change_at = DateTime.Now.ToString("dd-MM-yyyy");
                 }
             }
