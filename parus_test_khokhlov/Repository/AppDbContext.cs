@@ -11,5 +11,9 @@ namespace parus_test_khokhlov.Repository
         }
 
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Project_task> Tasks{ get; set; }
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<User> Users { get; set; }
+
     }
 }

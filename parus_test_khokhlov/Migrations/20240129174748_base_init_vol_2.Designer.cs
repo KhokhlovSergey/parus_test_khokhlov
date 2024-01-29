@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using parus_test_khokhlov.Repository;
@@ -11,9 +12,11 @@ using parus_test_khokhlov.Repository;
 namespace parus_test_khokhlov.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240129174748_base_init_vol_2")]
+    partial class base_init_vol_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace parus_test_khokhlov.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("parus_test_khokhlov.Repository.Project", b =>
@@ -78,7 +81,7 @@ namespace parus_test_khokhlov.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("parus_test_khokhlov.Repository.Task", b =>
@@ -116,7 +119,7 @@ namespace parus_test_khokhlov.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("parus_test_khokhlov.Repository.User", b =>
@@ -158,7 +161,7 @@ namespace parus_test_khokhlov.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("parus_test_khokhlov.Repository.Comment", b =>
