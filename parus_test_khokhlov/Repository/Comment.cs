@@ -12,6 +12,7 @@ namespace parus_test_khokhlov.Repository
         [Required]
         [Display(Name = "Текст комментария")]
         public string Text { get; set; }
+        public int? Project_taskId { get; set; }
 
         public string Created_at { get; set; } = DateTime.Now.ToString("dd-MM-yyyy");
 

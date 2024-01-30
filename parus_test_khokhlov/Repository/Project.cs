@@ -18,7 +18,7 @@ namespace parus_test_khokhlov.Repository
         public string Description { get; set; }
 
         [Display(Name = "Задачи")]
-        public List<Project_task>? Tasks { get; set; }
+        public List<Project_task>? Project_tasks { get; set; }
 
         [Display(Name = "Пользователи")]
         public List<User>? Users { get; set; }
