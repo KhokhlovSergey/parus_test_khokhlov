@@ -98,6 +98,90 @@ namespace parus_test_khokhlov.Controllers
             }
             catch (Exception ex)
             {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        //Добавление и удаление пользователя к проекту
+        [HttpPut]
+        [Route("api/[controller]/UserByProject/{_type}/projectId/{pId}/userId/{uId}")]
+        public IActionResult Put(string _type, int pId, int uId)
+        {
+           
+            try
+            {
+                ResponseType type = ResponseType.Success;
+                ProjectModel projectData = _db.GetProjectById(pId);
+                UserModel userData = _db.GetUserById(uId);
+                if (_type == "add")                {
+
+                    if (projectData == null || userData == null)
+                    {
+                        type = ResponseType.NotFound;
+                    }
+                    _db.ProjectAddUser(pId, uId);
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+                else if (_type == "del")
+                {
+                    if (projectData == null || userData == null)
+                    {
+                        type = ResponseType.NotFound;
+                    }
+                    _db.ProjectDelUser(pId, uId);
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+                else
+                {
+                    type = ResponseType.NotFound;
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        //Добавление и удаление задачи к проекту
+        [HttpPut]
+        [Route("api/[controller]/TaskByProject/{_type}/projectId/{pId}/taskId/{tId}/string/{_task}")]
+        public IActionResult Put(string _type, int pId, int tId, string _task)
+        {
+
+            try
+            {
+                ResponseType type = ResponseType.Success;
+                ProjectModel projectData = _db.GetProjectById(pId);
+                Project_taskModel taskData = _db.GetTaskById(tId);
+                if (_type == "add")
+                {
+
+                    if (projectData == null || taskData == null)
+                    {
+                        type = ResponseType.NotFound;
+                    }
+                    _db.ProjectAddTask(pId, tId);
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+                else if (_type == "del")
+                {
+                    if (projectData == null || taskData == null)
+                    {
+                        type = ResponseType.NotFound;
+                    }
+                    _db.ProjectDelTask(pId, tId);
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+                else
+                {
+                    type = ResponseType.NotFound;
+                    return Ok(ResponseHandler.GetAppResponse(type, projectData));
+                }
+            }
+            catch (Exception ex)
+            {
 
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }

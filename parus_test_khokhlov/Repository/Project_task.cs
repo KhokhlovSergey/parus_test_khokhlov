@@ -30,8 +30,7 @@ namespace parus_test_khokhlov.Repository
 
         [Display(Name = "Комментарии")]
         public List<Comment>? Comments { get; set; }
-
-
-
     }
+
+
 }
