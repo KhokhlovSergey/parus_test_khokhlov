@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace parus_test_khokhlov.Repository
 {
     [Table("Tasks")]
-    public class Project_task
+    public class ProjectTask
     {
         [Key, Required]
         public int Id { get; set; }

@@ -32,16 +32,10 @@ namespace parus_test_khokhlov.Models
         //Получение конкретного проекта с иерархией вложенных сущностей *Get
         public ProjectModel GetProjectById(int id)
         {
-            //ProjectModel response = new ProjectModel();
-            //var row = _context.Projects.Where(d => d.Id.Equals(id)).FirstOrDefault();
-            //var usersList = _context.Users.Include(u => u.Project).Where(u => u.ProjectId.Equals(id)).ToList();
-            //var tasksList = _context.Tasks.Include(t => t.Project).Where(t => t.ProjectId.Equals(id)).ToList();
             var row = _context.Projects.Where(d => d.Id.Equals(id))
                 .Include(d => d.Users)
                 .Include(d => d.Project_tasks)
                     .ThenInclude(p => p.Comments).FirstOrDefault();
-            //_context.Users.Where(p => p.ProjectId == row.Id).Load();
-            //_context.Tasks.Where(p => p.ProjectId == row.Id).Load();
             return new ProjectModel()
             {
                 Id = row.Id,
@@ -114,7 +108,7 @@ namespace parus_test_khokhlov.Models
 
         public void ProjectAddTask(int projectId, int taskId)
         {
-            Project_task dbTable = new Project_task();
+            ProjectTask dbTable = new ProjectTask();
             dbTable = _context.Tasks.Where(t => t.Id.Equals(taskId)).FirstOrDefault();
             if (dbTable != null)
             {
@@ -125,10 +119,10 @@ namespace parus_test_khokhlov.Models
 
         }
 
-        //Удаляем пользователя с проекта
+        //Удаляем задачу с проекта
         public void ProjectDelTask(int projectId, int taskId)
         {
-            Project_task dbTable = new Project_task();
+            ProjectTask dbTable = new ProjectTask();
             dbTable = _context.Tasks.Where(t => t.Id.Equals(taskId)).FirstOrDefault();
             if (dbTable != null)
             {
@@ -250,12 +244,12 @@ namespace parus_test_khokhlov.Models
         }
 
         //Заводим новую таску или изменяем старую
-        public void SaveTask(Project_taskModel taskModel)
+        public void SaveTask(ProjectTaskModel taskModel)
         {
-            Project_task dbTable = new Project_task();
+            ProjectTask dbTable = new ProjectTask();
             if (taskModel.Id > 0)
             {
-                //Редактирование проекта *UPDATE
+                //Редактирование задачи *UPDATE
                 dbTable = _context.Tasks.Where(t => t.Id.Equals(taskModel.Id)).FirstOrDefault();
                 if (dbTable != null)
                 {
@@ -265,12 +259,13 @@ namespace parus_test_khokhlov.Models
                     dbTable.Change_at = DateTime.Now.ToString("dd-MM-yyyy");
                 }
             }
-            // Это заводим новый проект *POST
+            // Это заводим новую задачу *POST
             else
             {
                 dbTable.Name = taskModel.Name;
                 dbTable.Description = taskModel.Description;
                 dbTable.Status = taskModel.Status;
+                dbTable.ProjectId = taskModel.ProjectId;
                 dbTable.Created_at = DateTime.Now.ToString("dd-MM-yyyy");
                 dbTable.Change_at = DateTime.Now.ToString("dd-MM-yyyy");
                 _context.Tasks.Add(dbTable);
@@ -279,17 +274,18 @@ namespace parus_test_khokhlov.Models
             _context.SaveChanges();
         }
 
-        public List<Project_taskModel> GetTaskByProject(int projectId)
+        public List<ProjectTaskModel> GetTaskByProject(int projectId)
         {
 
-            List<Project_taskModel> response = new List<Project_taskModel>();
+            List<ProjectTaskModel> response = new List<ProjectTaskModel>();
             var taskstlist = _context.Tasks.Where(t => t.ProjectId.Equals(projectId)).Include(c => c.Comments).ToList();
-            taskstlist.ForEach(row => response.Add(new Project_taskModel()
+            taskstlist.ForEach(row => response.Add(new ProjectTaskModel()
             {
                 Id = row.Id,
                 Name = row.Name,
                 Description = row.Description,
                 Status = row.Status,
+                ProjectId = row.ProjectId,
                 Comments = row.Comments,
                 Created_at = row.Created_at,
                 Change_at = row.Change_at
@@ -298,15 +294,16 @@ namespace parus_test_khokhlov.Models
             return response;
         }
 
-        public Project_taskModel GetTaskById(int id)
+        public ProjectTaskModel GetTaskById(int id)
         {
             var row = _context.Tasks.Where(t => t.Id.Equals(id)).FirstOrDefault();
-            return new Project_taskModel()
+            return new ProjectTaskModel()
             {
                 Id = row.Id,
                 Name = row.Name,
                 Description= row.Description,
                 Status = row.Status,
+                ProjectId = row.ProjectId,
                 Comments = row.Comments,
                 Created_at = row.Created_at,
                 Change_at = row.Change_at
@@ -314,18 +311,19 @@ namespace parus_test_khokhlov.Models
 
         }
 
-        public List<Project_taskModel> GetTaskByStatus(string  status)
+        public List<ProjectTaskModel> GetTaskByStatus(string  status)
         {
 
-            List<Project_taskModel> response = new List<Project_taskModel>();
+            List<ProjectTaskModel> response = new List<ProjectTaskModel>();
             var taskstlist = _context.Tasks.Where(t => t.Status.Equals(status)).Include(c => c.Comments).ToList();
             //var projectList= _context.Projects.Include(t => t.Project_tasks).Where()
-            taskstlist.ForEach(row => response.Add(new Project_taskModel()
+            taskstlist.ForEach(row => response.Add(new ProjectTaskModel()
             {
                 Id = row.Id,
                 Name = row.Name,
                 Description = row.Description,
                 Status = row.Status,
+                ProjectId = row.ProjectId,
                 Comments = row.Comments,
                 Created_at = row.Created_at,
                 Change_at = row.Change_at
@@ -334,12 +332,13 @@ namespace parus_test_khokhlov.Models
             return response;
         }
 
+        //Удаление задачи
         public void DeleteTask(int id)
         {
-            var order = _context.Users.Where(d => d.Id.Equals(id)).FirstOrDefault();
+            var order = _context.Tasks.Where(d => d.Id.Equals(id)).FirstOrDefault();
             if (order != null)
             {
-                _context.Users.Remove(order);
+                _context.Tasks.Remove(order);
                 _context.SaveChanges();
             }
         }
@@ -360,7 +359,8 @@ namespace parus_test_khokhlov.Models
             // Это заводим новый проект *POST
             else
             {
-                dbTable.Text = commentModel.Text;                
+                dbTable.Text = commentModel.Text;
+                dbTable.Project_taskId = commentModel.Project_taskId;
                 dbTable.Created_at = DateTime.Now.ToString("dd-MM-yyyy");
                 dbTable.Change_at = DateTime.Now.ToString("dd-MM-yyyy");
                 _context.Comments.Add(dbTable);
@@ -380,6 +380,7 @@ namespace parus_test_khokhlov.Models
             {
                 Id = row.Id,
                 Text = row.Text,
+                Project_taskId = row.Project_taskId,
                 Created_at = row.Created_at,
                 Change_at = row.Change_at
 

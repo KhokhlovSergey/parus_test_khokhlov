@@ -42,8 +42,10 @@ namespace parus_test_khokhlov.Controllers
         }
 
         //Получение пользователей в разбивке по проектам
-        [Route("api/[controller]/GetUsersByProject/projectId/{id}/{temp}")]
-        public IActionResult Get(int id, string temp)
+
+        [HttpGet]
+        [Route("api/[controller]/GetUsersByProject/projectId/{id}/{_temp}")]
+        public IActionResult Get(int id, string _temp)
         {
             ResponseType type = ResponseType.Success;
 

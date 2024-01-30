@@ -154,7 +154,7 @@ namespace parus_test_khokhlov.Controllers
             {
                 ResponseType type = ResponseType.Success;
                 ProjectModel projectData = _db.GetProjectById(pId);
-                Project_taskModel taskData = _db.GetTaskById(tId);
+                ProjectTaskModel taskData = _db.GetTaskById(tId);
                 if (_type == "add")
                 {
 

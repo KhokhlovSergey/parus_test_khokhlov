@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace parus_test_khokhlov.Models
 {
-    public class Project_taskModel
+    public class ProjectTaskModel
     {
         
         public int Id { get; set; }

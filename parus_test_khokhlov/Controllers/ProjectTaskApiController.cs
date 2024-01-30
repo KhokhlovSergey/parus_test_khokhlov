@@ -8,11 +8,11 @@ namespace parus_test_khokhlov.Controllers
 {
     
     [ApiController]
-    public class Project_taskApiController : ControllerBase
+    public class ProjectTaskApiController : ControllerBase
     {
         private readonly DbHelper _db;
 
-        public Project_taskApiController(AppDbContext appDbContext)
+        public ProjectTaskApiController(AppDbContext appDbContext)
         {
             _db = new DbHelper(appDbContext);
         }
@@ -25,7 +25,7 @@ namespace parus_test_khokhlov.Controllers
 
             try
             {
-                IEnumerable<Project_taskModel> data = _db.GetTaskByProject(id);
+                IEnumerable<ProjectTaskModel> data = _db.GetTaskByProject(id);
                 if (!data.Any())
                 {
                     type = ResponseType.NotFound;
@@ -48,7 +48,7 @@ namespace parus_test_khokhlov.Controllers
 
             try
             {
-                IEnumerable<Project_taskModel> data = _db.GetTaskByStatus(status);
+                IEnumerable<ProjectTaskModel> data = _db.GetTaskByStatus(status);
                 if (!data.Any())
                 {
                     type = ResponseType.NotFound;
@@ -66,7 +66,7 @@ namespace parus_test_khokhlov.Controllers
         // POST api/<Project_taskApiController> сохранение задачи
         [HttpPost]
         [Route("api/[controller]/SaveTask")]
-        public IActionResult Post([FromBody] Project_taskModel model)
+        public IActionResult Post([FromBody] ProjectTaskModel model)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace parus_test_khokhlov.Controllers
         // PUT api/<ProjectApiController>/5 редактирование задачи
         [HttpPut]
         [Route("api/[controller]/UpdateTask")]
-        public IActionResult Put([FromBody] Project_taskModel model)
+        public IActionResult Put([FromBody] ProjectTaskModel model)
         {
             try
             {
@@ -96,6 +96,25 @@ namespace parus_test_khokhlov.Controllers
             {
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
+        }
+
+        // DELETE api/<ProjectApiController>/5
+        [HttpDelete]
+        [Route("api/[controller]/DeleteTask/{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                ResponseType type = ResponseType.Success;
+                _db.DeleteTask(id);
+                return Ok(ResponseHandler.GetAppResponse(type, "Delete success"));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+
         }
 
 
